@@ -1,28 +1,20 @@
 ﻿using System.Xml;
 using Flurl.Http;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
 namespace TabDownloader.Service;
 
-public class Parser
+public class SongsterParser(IOptions<AppSettings> settings, CookieJar cookies)
 {
-    private readonly AppSettings _settings;
-    private readonly CookieJar _cookie;
-
-    public Parser(AppSettings settings, CookieJar cookie)
-    {
-        _settings = settings;
-        _cookie = cookie;
-    }
-
     public async Task<List<string>?> ParseSearchUrls(string url)
     {
         if (string.IsNullOrEmpty(url)) return null;
-        if (!url.StartsWith(_settings.SiteUrl)) return null;
+        if (!url.StartsWith(settings.Value.SiteUrl)) return null;
         
         var doc = await url
-            .WithHeaders(_settings.Headers)
-            .WithCookies(_cookie)
+            .WithHeaders(settings.Value.Headers)
+            .WithCookies(cookies)
             .GetStringAsync()
             .GetHtmlDocument();
 
@@ -33,24 +25,23 @@ public class Parser
         
         foreach (var tabNode in tabs)
         {
-            var tabUrl = _settings.SiteUrl + tabNode.Attributes?["href"]?.Value;
-            if (tabUrl != _settings.SiteUrl)
+            var tabUrl = settings.Value.SiteUrl + tabNode.Attributes["href"].Value;
+            if (!tabUrl.EndsWith(settings.Value.SiteUrl))
             {
                 result.Add(tabUrl);
             }
         }
-
-
+        
         return result;
     }
-    public async Task<Tab?> ParseTab(string url)
+    public async Task<SongsterTab?> ParseTab(string url)
     {
         if (string.IsNullOrEmpty(url)) return null;
-        if (!url.StartsWith(_settings.SiteUrl)) return null;
+        if (!url.StartsWith(settings.Value.SiteUrl)) return null;
 
         var doc = await url
-            .WithHeaders(_settings.Headers)
-            .WithCookies(_cookie)
+            .WithHeaders(settings.Value.Headers)
+            .WithCookies(cookies)
             .GetStringAsync()
             .GetHtmlDocument();
 
@@ -72,6 +63,6 @@ public class Parser
             return null;
         }
         
-        return new Tab(revisionId, url, artist, title, tabExt);
+        return new SongsterTab(revisionId, tabUrl, artist, title, tabExt);
     }
 }

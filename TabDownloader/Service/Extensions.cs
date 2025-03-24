@@ -3,19 +3,28 @@ using Spectre.Console;
 
 namespace TabDownloader.Service;
 
-public static class Utils
+public static class Extensions
 {
-    public static string GetUrlFromUser()
+    public static string GetTabString()
     {
-        var url = AnsiConsole.Prompt(
-            new TextPrompt<string>("[purple]enter a[/] [green]link[/]")
-                .PromptStyle("purple")
-                .ValidationErrorMessage("[red]entered link is incorrect[/]")
-                .Validate(url =>
-                    Uri.IsWellFormedUriString(url, UriKind.Absolute)));
-
-        return url;
+        return "       ";
     }
+    
+    public static string MarkupAquaColor(this string str)
+    {
+        return $"[aquamarine1]{str}[/]";
+    }
+
+    public static string MarkupMainColor(this string str)
+    {
+        return $"[mediumorchid3]{str}[/]";
+    }
+
+    public static string MarkupErrorColor(this string str)
+    {
+        return $"[red3_1]{str}[/]";
+    }
+    
     public static async Task<HtmlDocument?> GetHtmlDocument(this Task<string> html)
     {
         var content = await html;
