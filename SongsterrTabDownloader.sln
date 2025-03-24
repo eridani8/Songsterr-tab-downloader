@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabDownloader", "TabDownloader\TabDownloader.csproj", "{42084FBA-EE25-4C5E-AA30-33E88F7E1180}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongsterrTabDownloader", "SongsterrTabDownloader\SongsterrTabDownloader.csproj", "{42084FBA-EE25-4C5E-AA30-33E88F7E1180}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
